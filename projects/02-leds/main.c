@@ -18,38 +18,34 @@
 
 /* Typedef -----------------------------------------------------------*/
 /* Define ------------------------------------------------------------*/
+#define LED_PIN1    PB0
 #define LED_PIN     PB5
 #define BLINK_DELAY 500
-#define BUTTON      PD2
- 
+#define BTN     PD2
+
 /* Variables ---------------------------------------------------------*/
 /* Function prototypes -----------------------------------------------*/
 
 /* Functions ---------------------------------------------------------*/
-/**
-  * Brief:  Main program. Blink a LED with delay function.
-  * Input:  None
-  * Return: None
-  */
+
 int main(void)
 {
     /* Set output pin */
-    DDRB |= _BV(LED_PIN);           /* DDRB = DDRB or (0010 0000) */
-    DDRB |= _BV(LED_PIN1);          /* DDRB = DDRB or (0010 0000) */
-    DDRD &= ~_BV(BUTTON);
-  
+    DDRB |= _BV(LED_PIN);           
+    DDRB |= _BV(LED_PIN1);          
+    DDRD &= ~_BV(BTN);
+    PORTD |= _BV(BTN);
 
     /* Turn LED off */
-    PORTB &= ~_BV(LED_PIN);         /* PORTB = PORTB and (0010 0000) */
-    PORTD |= _BV(BUTTON); 
-    DDRD &= ~_BV(BUTTON); 
+    PORTB &= ~_BV(LED_PIN);          
+    DDRD &= ~_BV(BTN); 
+
     /* Infinite loop */
-  
-    for (;;)
+     for (;;)
     {
-      if (bit_is_clear(PIND, BUTTON){
+      if (bit_is_clear(PIND, BTN)){
         /* Invert LED and delay */
-        PORTB ^= _BV(LED_PIN);      /* PORTB = PORTB xor (0010 0000) */
+        PORTB ^= _BV(LED_PIN);      
         PORTB ^= _BV(LED_PIN1);
         _delay_ms(BLINK_DELAY);}
 
