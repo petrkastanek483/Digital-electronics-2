@@ -94,8 +94,8 @@ ISR(ADC_vect)
 
     // TODO: Update LCD and UART transmiter
     itoa(value, uart_string, 10);
-    uart_puts ( " \033[0 m " ) ;
-    uart_puts ( " \033[4;32 m " ) ;
+    //uart_puts ( " \033[0 m " ) ;
+    //uart_puts ( " \033[4;32 m " ) ;
     lcd_puts (uart_string);
     lcd_puts("  ");
     uart_puts(uart_string);
@@ -105,35 +105,48 @@ ISR(ADC_vect)
     {
         lcd_clrscr();
         lcd_gotoxy(0,1);
-        uart_puts("NORMAL\r\n");
+        
+        uart_puts ("\033[4;32m");
+        uart_puts("RIGHT\r\n");
+        uart_puts("\033[0m");
         lcd_puts("RIGHT");
+        
+        
     }
     else if(value == 99)   
     {
         lcd_clrscr();
         lcd_gotoxy(0,1);
-        uart_puts("value\r\n" );
+        uart_puts ("\033[3;33m");
+        uart_puts("UP\r\n" );
+        uart_puts("\033[0m");
         lcd_puts("UP");
     }
     else if(value == 256)   
     {
         lcd_clrscr();
         lcd_gotoxy(0,1);
-        uart_puts("value\r\n" );
+        uart_puts ("\033[9;34m");
+        uart_puts("DOWN\r\n" );
+        uart_puts("\033[0m");
         lcd_puts("DOWN");
     }
     else if(value == 409)   
     {
         lcd_clrscr();
         lcd_gotoxy(0,1);
-        uart_puts("value\r\n" );
+        uart_puts ("\033[5;94m");
+        uart_puts("LEFT\r\n" );
+        uart_puts("\033[0m");
         lcd_puts("LEFT");
     }
    else if(value == 639)   
     {
         lcd_clrscr();
         lcd_gotoxy(0,1);
-        uart_puts("value\r\n" );
+        uart_puts ("\033[3;91m");
+        uart_puts("SELECT\r\n" );
+        uart_puts("\033[0m");
         lcd_puts("SELECT");
     }
     else
