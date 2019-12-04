@@ -28,6 +28,7 @@
 #define BTN_S3          PC3 // PCINT 11
 
 /* Variables ---------------------------------------------------------*/
+volatile uint16_t value = 0;
 /* Function prototypes -----------------------------------------------*/
 
 /* Functions ---------------------------------------------------------*/
@@ -39,29 +40,31 @@
 int main(void)
 {
     /* D1 led */
-    // TODO: Configure D1 led at Multi-Function Shield
-    GPIO_config_output (&DDRB,LED_D1);
-    GPIO_write (&PORTB, LED_D1, 1);
+    GPIO_config_output(&DDRB, LED_D1);
+    GPIO_write(&PORTB, LED_D1, PIN_LOW);
+
     /* Pin Change Interrupts 11:9 */
-    // TODO: Configure Pin Change Interrupts 11, 10, and 9
     PCICR |= _BV(PCIE1); 
-    PCMSK1 |=_BV(PCINT11);
-    PCMSK1 |=_BV(PCINT10);
-    PCMSK1 |=_BV(PCINT9);
+    PCMSK1 |= (_BV(PCINT11) | _BV(PCINT10) | _BV(PCINT9));
 
     /* 7-segment display interface */
-    // TODO: Configure 7-segment display pins
-    GPIO_config_output (&DDRB , SEGMENT_DATA) ;
-    GPIO_config_output (&DDRD , SEGMENT_CLK) ;
-    GPIO_config_output (&DDRD , SEGMENT_LATCH) ;
+    GPIO_config_output(&DDRB, SEGMENT_DATA);
+    GPIO_config_output(&DDRD, SEGMENT_CLK);
+    GPIO_config_output(&DDRD, SEGMENT_LATCH);
+
+    /* Timer 0 configuration for segment switching*/
+    TIM_config_prescaler(TIM0, TIM_PRESC_256);
+    TIM_config_interrupt(TIM0, TIM_OVERFLOW_ENABLE);
+
+    /* Timer 1 configuration for value incrementation */
+    TIM_config_prescaler(TIM1, TIM_PRESC_8);
+    TIM_config_interrupt(TIM1, TIM_OVERFLOW_ENABLE);
+
     /* Enable interrupts by setting the global interrupt mask */
     sei();
-    
 
     /* Infinite loop */
     for (;;) {
-        // TODO: Use function to display digit 1 at position 0
-        SEG_putc(1, 0);
     }
 
     return (0);
@@ -72,8 +75,49 @@ int main(void)
  */
 ISR(PCINT1_vect)
 {
-    // TODO: Toggle a led
-    GPIO_toggle (&DDRB,LED_D1) ;
-    
+    GPIO_toggle(&PORTB, LED_D1);
 }
 
+ISR(TIMER0_OVF_vect)
+{
+    static uint8_t segment = 0;
+    segment++;
+    if(segment >= 4)
+    {
+        segment = 0;
+    }
+
+    uint8_t ones, tens, hundreds, thousands;
+
+    ones = value % 10;
+    tens = (value / 10) % 10;
+    hundreds = (value / 100) % 10;
+    thousands = value / 1000;
+
+    switch(segment)
+    {
+        case 0:
+            SEG_putc(ones, segment);
+            break;
+        case 1:
+            SEG_putc(tens, segment);
+            break;
+        case 2:
+            SEG_putc(hundreds, segment);
+            break;
+        case 3:
+            SEG_putc(thousands, segment);
+            break;
+        default:
+            SEG_putc(0, segment);
+    }
+}
+
+ISR(TIMER1_OVF_vect)
+{
+    value++;
+    if (value > 9999)
+    {
+        value = 0;
+    }
+}
