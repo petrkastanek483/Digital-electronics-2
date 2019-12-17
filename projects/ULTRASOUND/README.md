@@ -16,9 +16,9 @@ Tento projekt je zaměřen na měření vzdálenosti pomocí snímače HC-SR04. 
 
 ## Hardware
 
-senzor HC-SR04
-multi function shield
-AVR ATmega
+senzor HC-SR04  
+multi function shield  
+AVR ATmega  
 
 
 ## Software
