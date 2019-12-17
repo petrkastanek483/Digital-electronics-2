@@ -26,13 +26,13 @@ AVR ATmega
 Zde lze vidět část kódu, díky které je vysílán trigger pulz z vysílače senzoru HC-SR04:
 
 /* Trigger pulse */
-
+uint8_t ReadStatus = 0;
 void sendTrigger(uint8_t pin) {
     GPIO_config_output(&DDRD, trig);
     _delay_us(2);   // 2 us delay
     GPIO_write(&PORTD, pin, 1);
     _delay_us(10);  // 10 us delay
-    GPIO_write(&PORTD, pin, 0);
+    GPIO_write(&PORTD, pin, 0); }
     
 Poté probíhá zpracování tohoto signálu pomocí části kódu níže: 
 
