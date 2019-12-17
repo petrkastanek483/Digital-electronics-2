@@ -47,7 +47,7 @@ uint8_t c;
 
 void sendTrigger(uint8_t pin) {
     GPIO_config_output(&DDRD, trig);
-    _delay_us(2);
+    _delay_us(2);   // 2 us delay
     GPIO_write(&PORTD, pin, 1);
     _delay_us(10);  // 10 us delay
     GPIO_write(&PORTD, pin, 0);
@@ -114,7 +114,7 @@ int main(void)
                 GPIO_write(&PORTB, LED_D2, 0);
                 GPIO_write(&PORTB, LED_D3, 0);
                 GPIO_write(&PORTB, LED_D4, 0);
-                _delay_ms(10);     /* Wait for several milisecs */
+                _delay_ms(10);     /* Wait for several milisecs, frequency of buzzer */
 
             }
             else if (VZ < 4) {
@@ -123,7 +123,7 @@ int main(void)
                 GPIO_write(&PORTB, LED_D2, 0);
                 GPIO_write(&PORTB, LED_D3, 0);
                 GPIO_write(&PORTB, LED_D4, 1);
-                _delay_ms(30);     /* Wait for several milisecs */
+                _delay_ms(30);     /* Wait for several milisecs, frequency of buzzer */
 
             }
             else if (VZ < 8) {
@@ -132,7 +132,7 @@ int main(void)
                 GPIO_write(&PORTB, LED_D2, 0);
                 GPIO_write(&PORTB, LED_D3, 1);
                 GPIO_write(&PORTB, LED_D4, 1);
-                _delay_ms(50);     /* Wait for several milisecs */
+                _delay_ms(50);     /* Wait for several milisecs, frequency of buzzer */
 
             }
 
@@ -142,20 +142,23 @@ int main(void)
                 GPIO_write(&PORTB, LED_D2, 1);
                 GPIO_write(&PORTB, LED_D3, 1);
                 GPIO_write(&PORTB, LED_D4, 1);
-                _delay_ms(100);     /* Wait for several milisecs */
+                _delay_ms(100);     /* Wait for several milisecs, frequency of buzzer */
 
             }
             else {
+               
+               /* long distance */
                 GPIO_write(&PORTD, buzz, 1);
                 GPIO_write(&PORTB, LED_D1, 1);
                 GPIO_write(&PORTB, LED_D2, 1);
                 GPIO_write(&PORTB, LED_D3, 1);
                 GPIO_write(&PORTB, LED_D4, 1);
-                _delay_ms(100);     /* Wait for several milisecs */
+                _delay_ms(100);     
 
             }
         }
         else {
+          
 
             GPIO_write(&PORTD, buzz, 1);
             GPIO_write(&PORTB, LED_D1, 1);
@@ -175,7 +178,7 @@ int main(void)
 
 ISR(PCINT1_vect)
 {
-    //GPIO_toggle(&PORTB, LED_D1);
+    
 }
 
 ISR(TIMER0_OVF_vect)
@@ -189,7 +192,7 @@ ISR(TIMER0_OVF_vect)
 
     uint8_t ones, tens, hundreds, thousands;
 
-    VZ = vzd / 58.31;
+    VZ = vzd / 58.31;   // conversion to centimetres
     ones = VZ % 10;
     tens = (VZ / 10) % 10;
     hundreds = (VZ / 100) % 10;
