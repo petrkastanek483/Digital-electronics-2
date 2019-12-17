@@ -45,12 +45,12 @@ uint8_t c;
 
  /* Trigger pulse */
 
-void sendTrigger(uint8_t pin_numD) {
+void sendTrigger(uint8_t pin) {
     GPIO_config_output(&DDRD, trig);
     _delay_us(2);
-    GPIO_write(&PORTD, pin_numD, 1);
+    GPIO_write(&PORTD, pin, 1);
     _delay_us(10);  // 10 us delay
-    GPIO_write(&PORTD, pin_numD, 0);
+    GPIO_write(&PORTD, pin, 0);
 
 }
 
@@ -173,9 +173,6 @@ int main(void)
     return (0);
 }
 
-/**
- *  Brief: Pin Change Interrupt 11:9 routine. Toggle a LED.
- */
 ISR(PCINT1_vect)
 {
     //GPIO_toggle(&PORTB, LED_D1);
